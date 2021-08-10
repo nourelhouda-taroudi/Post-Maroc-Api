@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -29,10 +30,15 @@ class ClientController extends Controller
         return response()->json($client);
     }
     public function getClient($CIN){
-        $client=Client::where('CIN_Number','=',$CIN)->get(); ;
+        $client=Client::where('CIN_Number','=',$CIN)->get();
         return response()->json($client);
     }
-    public function updateClient(){
+    public function getAccountBalance($CIN){
+        $accountBalance=DB::table('clients')
+        ->where('CIN_Number','=',$CIN)
+        ->select('accountBalance')
+        ->first();
+        return response()->json($accountBalance);
 
     }
 }
