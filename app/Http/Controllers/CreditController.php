@@ -130,9 +130,6 @@ class CreditController extends Controller
             'signature' => $signature,
             'publicKey' => $publicKey
       ]);
-        //$credit->signature = $signature;
-        //$credit->publicKey = $publicKey;
-        //$credit->save();
 
         return response()->json(['signature'=>$signature],201);
     }
