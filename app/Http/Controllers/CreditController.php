@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Credit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Crypto\Rsa\KeyPair;
+use Spatie\Crypto\Rsa\PrivateKey;
+use Spatie\Crypto\Rsa\PublicKey;
 
 class CreditController extends Controller
 {
@@ -101,5 +104,36 @@ class CreditController extends Controller
         $credit->save();
 
         return $credit;
+    }
+    public function sign(Request $request , $idCredit){
+ 
+        $credit = Credit::where('idCredit',$idCredit)->first();
+        if($credit== null){
+            return response()->json(['error'=>'Credit is not found.'],404);
+        }
+        // generating an RSA key pair
+        [$privateKey, $publicKey] = (new KeyPair())->generate();
+
+        // Get PDF as base64
+        $file = $request->document;
+
+        // Hash file with SHA256
+        $hash_file = hash('sha256',$file);
+
+        //$data = base64_encode($file);
+
+        // Create signature
+        $signature = PrivateKey::fromString($privateKey)->sign($hash_file);
+        DB::table('credits')
+            ->where('idCredit', $idCredit)
+            ->update([
+            'signature' => $signature,
+            'publicKey' => $publicKey
+      ]);
+        //$credit->signature = $signature;
+        //$credit->publicKey = $publicKey;
+        //$credit->save();
+
+        return response()->json(['signature'=>$signature],201);
     }
 }

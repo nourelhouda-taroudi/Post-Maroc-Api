@@ -14,11 +14,12 @@ class CreateCreditsTable extends Migration
     public function up()
     {
         Schema::create('credits', function (Blueprint $table) {
-            $table->integer('idCredit')->primary('idCredit');
+            $table->bigIncrements('idCredit');
             $table->bigInteger('amount');
             $table->double('rate');
             $table->integer('duration');
-            $table->string('signature',500)->nullable();
+            $table->string('signature',1000)->nullable();
+            $table->string('publicKey',1000)->nullable();
             $table->double('monthly');
             $table->string('Client_CIN_Number');
             $table->foreign('Client_CIN_Number')->references('CIN_Number')->on('clients');
