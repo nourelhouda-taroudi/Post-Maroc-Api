@@ -17,21 +17,21 @@ class ClientController extends Controller
     {
         if($request->age <20 || $request->age>50){
             if($request->age<20){
-                return response()->json("age must be greater then 20 years");
+                return response()->json(['age must be greater then 20 years'],422);
             }
             else{
-                return response()->json("age must be less then 50 years");
+                return response()->json(["age must be less then 50 years"],422);
             }
         }
         if($request->salary<1500 ){
-            return response()->json("salary must be greater then 1500 DH");
+            return response()->json(["salary must be greater then 1500 DH"],422);
         }
         $client = Client::create($request->all());
-        return response()->json($client);
+        return response()->json([$client,$request->all()]);
     }
     public function getClient($CIN){
         $client=Client::where('CIN_Number','=',$CIN)->get();
-        return response()->json($client);
+        return response()->json([$client],201);
     }
     public function getAccountBalance($CIN){
         $accountBalance=DB::table('clients')
