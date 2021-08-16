@@ -102,6 +102,16 @@ class CreditController extends Controller
         $credit->monthly = $monthly;
         $credit->Client_CIN_Number = $CIN;
         $credit->save();
+        // Update account balance for client
+        $accountBalance=(DB::table('clients')
+                            ->where('CIN_Number', $CIN)
+                            ->select('accountBalance')
+                            ->first()
+                        )->accountBalance;
+        
+        DB::table('clients')
+            ->where('CIN_Number', $CIN)
+            ->update(['accountBalance' => $accountBalance+$amount]);
 
         return $credit;
     }
