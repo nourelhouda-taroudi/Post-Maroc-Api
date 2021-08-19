@@ -19,9 +19,7 @@ class DocumentController extends Controller
             return response()->json('This CIN is invalid');
         }
         $destinationPath = 'uploads';
-        //$CIN_front = $request->file('CIN_front');
-        //$CIN_back =  $request->file('CIN_back ');
-        //$salaryCertificate = $request->file('salaryCertificate ');
+        
         $CIN_front = $request->file('CIN_front');
         $CIN_front_filename = time().$CIN_front->getClientOriginalName();
         $CIN_front->move($destinationPath,$CIN_front_filename);
