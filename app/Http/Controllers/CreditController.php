@@ -38,7 +38,7 @@ class CreditController extends Controller
                 return response()->json(['error'=>"Amount invalid."],422);
             }
             $credit = $this->calculateAndCreateCredit($amount,$rate,$CIN,$monthly);
-            return response()->json(['credit'=>$credit],201);
+            return response()->json($credit,201);
         }
 
         // 40000DH - 10000DH
@@ -55,7 +55,7 @@ class CreditController extends Controller
                 return response()->json(['error'=>"Amount invalid."],422);
             }
             $credit = $this->calculateAndCreateCredit($amount,$rate,$CIN,$monthly);
-            return response()->json(['credit'=>$credit],201);
+            return response()->json($credit,201);
         }
 
         // 10000DH - 50000DH
@@ -72,7 +72,7 @@ class CreditController extends Controller
                 return response()->json(['error'=>"Amount invalid."],422);
             }
             $credit = $this->calculateAndCreateCredit($amount,$rate,$CIN,$monthly);
-            return response()->json(['credit'=>$credit],201);
+            return response()->json($credit,201);
         }
         // >50000DH
         if($salary >= 50000){
@@ -88,7 +88,7 @@ class CreditController extends Controller
                 return response()->json(['error'=>"Amount invalid."],422);
             }
             $credit = $this->calculateAndCreateCredit($amount,$rate,$CIN,$monthly);
-            return response()->json(['credit'=>$credit],201);
+            return response()->json($credit,201);
         }
         return response()->json(['error'=>"Sorry, Can not create credit."],422);
     }
@@ -141,6 +141,6 @@ class CreditController extends Controller
             'publicKey' => $publicKey
       ]);
 
-        return response()->json(['signature'=>$signature],201);
+        return response()->json($signature,201);
     }
 }
