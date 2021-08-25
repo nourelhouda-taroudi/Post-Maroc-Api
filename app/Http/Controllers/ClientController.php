@@ -30,15 +30,19 @@ class ClientController extends Controller
         return response()->json([$client,$request->all()]);
     }
     public function getClient($CIN){
-        $client=Client::where('CIN_Number','=',$CIN)->get();
-        return response()->json([$client],201);
+        $client=Client::where('CIN_Number','=',$CIN)->first();
+        return response()->json($client,201);
     }
     public function getAccountBalance($CIN){
-        $accountBalance=DB::table('clients')
+        $accountBalance_obj=DB::table('clients')
         ->where('CIN_Number','=',$CIN)
         ->select('accountBalance')
         ->first();
-        return response()->json($accountBalance);
+        if($accountBalance_obj!=null){
+            $accountBalance=$accountBalance_obj->accountBalance;
+            return response()->json($accountBalance);
+        }
+        return response()->json("Not found",404);
 
     }
 }
