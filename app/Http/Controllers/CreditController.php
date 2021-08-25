@@ -38,7 +38,7 @@ class CreditController extends Controller
                 return response()->json(['error'=>"Amount invalid."],422);
             }
             $credit = $this->calculateAndCreateCredit($amount,$rate,$CIN,$monthly);
-            return response()->json(['credit'=>$credit],201);
+            return response()->json($credit,201);
         }
 
         // 40000DH - 10000DH
@@ -55,7 +55,7 @@ class CreditController extends Controller
                 return response()->json(['error'=>"Amount invalid."],422);
             }
             $credit = $this->calculateAndCreateCredit($amount,$rate,$CIN,$monthly);
-            return response()->json(['credit'=>$credit],201);
+            return response()->json($credit,201);
         }
 
         // 10000DH - 50000DH
@@ -72,7 +72,7 @@ class CreditController extends Controller
                 return response()->json(['error'=>"Amount invalid."],422);
             }
             $credit = $this->calculateAndCreateCredit($amount,$rate,$CIN,$monthly);
-            return response()->json(['credit'=>$credit],201);
+            return response()->json($credit,201);
         }
         // >50000DH
         if($salary >= 50000){
@@ -88,7 +88,7 @@ class CreditController extends Controller
                 return response()->json(['error'=>"Amount invalid."],422);
             }
             $credit = $this->calculateAndCreateCredit($amount,$rate,$CIN,$monthly);
-            return response()->json(['credit'=>$credit],201);
+            return response()->json($credit,201);
         }
         return response()->json(['error'=>"Sorry, Can not create credit."],422);
     }
@@ -102,6 +102,16 @@ class CreditController extends Controller
         $credit->monthly = $monthly;
         $credit->Client_CIN_Number = $CIN;
         $credit->save();
+        // Update account balance for client
+        $accountBalance=(DB::table('clients')
+                            ->where('CIN_Number', $CIN)
+                            ->select('accountBalance')
+                            ->first()
+                        )->accountBalance;
+        
+        DB::table('clients')
+            ->where('CIN_Number', $CIN)
+            ->update(['accountBalance' => $accountBalance+$amount]);
 
         return $credit;
     }
@@ -130,10 +140,12 @@ class CreditController extends Controller
             'signature' => $signature,
             'publicKey' => $publicKey
       ]);
-        //$credit->signature = $signature;
-        //$credit->publicKey = $publicKey;
-        //$credit->save();
 
-        return response()->json(['signature'=>$signature],201);
+        return response()->json($signature,201);
+    }
+    public function getCredit($idCredit)
+    {
+        $credit=Credit::where('idCredit','=',$idCredit)->first();
+        return response()->json($credit,201);
     }
 }
