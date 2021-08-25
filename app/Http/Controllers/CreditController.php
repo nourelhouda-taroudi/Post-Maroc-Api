@@ -143,4 +143,9 @@ class CreditController extends Controller
 
         return response()->json($signature,201);
     }
+    public function getCredit($idCredit)
+    {
+        $credit=Credit::where('idCredit','=',$idCredit)->first();
+        return response()->json($credit,201);
+    }
 }
