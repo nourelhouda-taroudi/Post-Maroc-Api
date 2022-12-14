@@ -130,8 +130,6 @@ class CreditController extends Controller
         // Hash file with SHA256
         $hash_file = hash('sha256',$file);
 
-        //$data = base64_encode($file);
-
         // Create signature
         $signature = PrivateKey::fromString($privateKey)->sign($hash_file);
         DB::table('credits')
